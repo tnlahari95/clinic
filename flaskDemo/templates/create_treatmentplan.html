@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+           
+			<div class="form-group">
+                {{ form.TreatmentID.label(class="form-control-label") }}
+                {% if form.TreatmentID.errors %}
+                    {{ form.TreatmentID(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.TreatmentID.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.TreatmentID(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			
+            <div class="form-group">
+                {{ form.TreatmentCost.label(class="form-control-label") }}
+                {% if form.TreatmentCost.errors %}
+                    {{ form.TreatmentCost(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.TreatmentCost.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.TreatmentCost(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.Is_Trauma.label(class="form-control-label") }}
+                {% if form.Is_Trauma.errors %}
+                    {{ form.Is_Trauma(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Is_Trauma.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Is_Trauma(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.Measures_taken.label(class="form-control-label") }}
+                {% if form.Measures_taken.errors %}
+                    {{ form.Measures_taken(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Measures_taken.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Measures_taken(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Is_Medication.label(class="form-control-label") }}
+                {% if form.Is_Medication.errors %}
+                    {{ form.Is_Medication(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Is_Medication.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Is_Medication(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Medicine_name.label(class="form-control-label") }}
+                {% if form.Medicine_name.errors %}
+                    {{ form.Medicine_name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Medicine_name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Medicine_name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Dosage.label(class="form-control-label") }}
+                {% if form.Dosage.errors %}
+                    {{ form.Dosage(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Dosage.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Dosage(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Is_councelling.label(class="form-control-label") }}
+                {% if form.Is_councelling.errors %}
+                    {{ form.Is_councelling(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Is_councelling.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Is_councelling(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Councelling_Feedback.label(class="form-control-label") }}
+                {% if form.Councelling_Feedback.errors %}
+                    {{ form.Councelling_Feedback(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Councelling_Feedback.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Councelling_Feedback(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Is_therapy.label(class="form-control-label") }}
+                {% if form.Is_therapy.errors %}
+                    {{ form.Is_therapy(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Is_therapy.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Is_therapy(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+			<div class="form-group">
+                {{ form.Therapy_Outcome.label(class="form-control-label") }}
+                {% if form.Therapy_Outcome.errors %}
+                    {{ form.Therapy_Outcome(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.Therapy_Outcome.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.Therapy_Outcome(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+{% endblock content %}
