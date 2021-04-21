@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for row in outString %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{url_for('treat', TreatmentID=row.TreatmentID, AppointmentID=row.AppointmentID, DoctorID=row.DoctorID)}}">TreatmentID:{{ row['TreatmentID'] }}<br>AppointmentID:{{row['AppointmentID']}}<br>DoctorID:{{row['DoctorID']}}</a>				  
+              <small class="text-muted"></small>		  
+            </div>
+			<h4><a class="article-title" href="{{ url_for('treat', TreatmentID=row['TreatmentID'], AppointmentID=row['AppointmentID'], DoctorID=row['DoctorID']) }}">{{ row['Description'] }}</a></h4>
+           
+          </div>
+        </article>
+     {% endfor %}
+{% endblock content %}

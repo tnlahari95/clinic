@@ -16,6 +16,11 @@
 
       <h2>{{ treatmentplan['TreatmentID'] }} </h2>
       <p>Treatment Cost: {{ treatmentplan['TreatmentCost'] }}</p>
+	  <p>Treatment Plan:</p>
+	  <p>Trauma? {{treatmentplan ['Is_Trauma']}}<br>Measures taken: {{treatmentplan ['Measures_taken']}}</p>
+	  <p>Councelling? {{treatmentplan ['Is_councelling']}}<br>Councelling Feedback: {{treatmentplan ['Councelling_Feedback']}}</p>
+	  <p>Therapy? {{treatmentplan ['Is_therapy']}}<br>Therapy Outcome: {{treatmentplan ['Therapy_Outcome']}}</p>
+	  <p>Medication: {{treatmentplan ['Is_Medication']}}<br>Medicine Name: {{treatmentplan ['Medicine_name']}}<br>Dosage: {{treatmentplan ['Dosage']}}</p>
 
     </div>
   </article>

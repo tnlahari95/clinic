@@ -15,7 +15,8 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
-		
+		justify-content:space-between;
+		text-align: left;
 		}
 
 		.flex-container > div 
@@ -35,18 +36,19 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Patient</a>
+          <a class="navbar-brand mr-4" href="/">Clinic</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-              <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+              <a class="nav-item nav-link" href="{{ url_for('home') }}">Treatment Log</a>
+          
               <a class="nav-item nav-link" href="{{ url_for('doctors') }}">Doctors</a>
               <a class="nav-item nav-link" href="{{ url_for('patients') }}">Patients</a>
 			  <a class="nav-item nav-link" href="{{ url_for('appointments') }}">Appointments</a>
 			  <a class="nav-item nav-link" href="{{ url_for('treatmentplans') }}">Treatment Plans</a>
+			    <a class="nav-item nav-link" href="{{url_for('invoices')}}">Invoice</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -79,7 +81,7 @@
         <div class="col-md-4">
           <div class="content-section">
             <h3>Add New</h3>
-            <p class='text-muted'>Add
+            <p class='text-muted'>
               <ul class="list-group">
                 <li class="list-group-item list-group-item-light">
                   <a href="{{ url_for('new_doctor') }}">New Doctor</a>
