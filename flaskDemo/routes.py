@@ -14,21 +14,29 @@ from datetime import datetime
 def home():
     #results = Treats.query.all()
     
-    resultsinvoice = Treats.query.join(TreatmentPlan,Treats.TreatmentID == TreatmentPlan.TreatmentID)\
-                .add_columns(TreatmentPlan.TreatmentCost, Treats.Description, TreatmentPlan.Medicine_name)\
-                .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
-                .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                .add_columns(Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, Appointment.Time, Appointment.Reason)
+    #resultsinvoice = Treats.query.join(TreatmentPlan,Treats.TreatmentID == TreatmentPlan.TreatmentID)\
+     #           .add_columns(TreatmentPlan.TreatmentCost, Treats.Description, TreatmentPlan.Medicine_name)\
+      #          .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
+       #         .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+        #        .add_columns(Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, Appointment.Time, Appointment.Reason)
                 
       
     res2 = Treats.query.join(TreatmentPlan, Treats.TreatmentID == Treats.TreatmentID)\
           .join(Doctor, Doctor.DoctorID == Treats.DoctorID)\
           .join(Appointment, Appointment.AppointmentID == Treats.AppointmentID)
         
-    return render_template('dept_home.html', outString=res2, outString1=resultsinvoice)
+    return render_template('dept_home.html', outString=res2)
 
-
-
+@app.route("/invoices")
+@login_required
+def invoices():  
+    resultsinvoice = Treats.query.join(TreatmentPlan,Treats.TreatmentID == TreatmentPlan.TreatmentID)\
+                    .add_columns(TreatmentPlan.TreatmentCost, Treats.Description, TreatmentPlan.Medicine_name)\
+                    .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
+                    .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+                    .add_columns(Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, Appointment.Time, Appointment.Reason)
+                
+    return render_template('invoices.html', outString1=resultsinvoice)
 
    # resultsinvoice = Appointment.query.join(Patient,Appointment.PatientSSN == Patient.PatientSSN) \
     #         .add_columns(Appointment.PatientSSN, Patient.FirstName, Patient.LastName, Patient.Address) \
@@ -439,3 +447,7 @@ def delete_treatmentplan(TreatmentID):
     db.session.commit()
     flash('The treatmentplan has been deleted!', 'success')
     return redirect(url_for('treatmentplans'))
+
+
+
+
