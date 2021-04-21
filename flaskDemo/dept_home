@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for row in outString %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ row }}</a>				  
+              <small class="text-muted"><br>TreatmentID:{{ row['TreatmentID'] }} <br>AppointmentID:{{row['AppointmentID']}} <br>DoctorID:{{row['DoctorID']}} </small>		  
+            </div>
+			<h2><a class="article-title" href="{{ url_for('treat', TreatmentID=row['TreatmentID'], AppointmentID=row['AppointmentID'], DoctorID=row['DoctorID']) }}">{{ row['Description'] }}</a></h2>
+           
+          </div>
+        </article>
+     {% endfor %}
+	 {% for row in outString1 %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <p style= "color: purple">Patient Name: {{row['FirstName']}} {{row['LastName']}}
+			  <br>AppointmentID: {{row['AppointmentID']}}<br> Date/Time: {{row['Date']}},{{row['Time']}}<br>Reason: {{row['Reason']}}</p> 
+            </div>
+			 <div class="article-metadata">
+			<p><br> Doctor's Description: {{row['Description']}}</p>
+			</div>
+			
+				<p>Treatment Plan: {{row['Medicine_name']}}<br>Treatment Cost($): {{row['TreatmentCost']}}</p>
+			 </div>
+			
+        </article>
+     {% endfor %}
+{% endblock content %}
