@@ -5,9 +5,10 @@
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="{{ url_for('appointment', AppointmentID=row.AppointmentID) }}">Appointment ID: {{ row['AppointmentID'] }}</a>		  
-              <small class="text-muted"></small>		  
+              <small class="text-muted">Date: {{row.Date}} {{row.Time}}</small>		  
             </div>
-			      
+			      <h4>Patient: {{row.FirstName}} {{row.LastName}}</h4>
+            <p>Is an Emergency: {% if row.Is_Emergency == 1 %} True {% else %} False {% endif %}</p>
           </div>
         </article>
      {% endfor %}

@@ -316,8 +316,9 @@ def delete_patient(patientssn):
     return redirect(url_for('patients'))
 
 @app.route("/appointments")
-def appointments():
-    appointments = Appointment.query.all()
+def appointments(): 
+    appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+                    .add_columns(Appointment.AppointmentID, Patient.FirstName, Patient.LastName, Appointment.Date, Appointment.Time, Appointment.Is_Emergency)
     return render_template('appointments.html', title="Appointments", outString=appointments)
 
 @app.route("/appointments/<AppointmentID>")
