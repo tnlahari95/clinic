@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
   <article class="media content-section">
-<!--    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/default.jpg')}}"> -->
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="#">TreatmentID: {{ treat.TreatmentID }} AppointmentID: {{treat.AppointmentID}} DoctorID: {{treat.DoctorID}}</a>
+        <a class="mr-2" href="#">Treatment ID: {{ treat.TreatmentID }}, Appointment ID: {{treat.AppointmentID}}, Doctor ID: {{treat.DoctorID}}</a>
         <small class="text-muted"></small>
 
           <div>
@@ -14,7 +13,18 @@
  
       </div>
 
-      <h2>{{ treat['TreatmentID'] }} {{ treat['AppointmentID'] }} {{ treat['DoctorID'] }}</h2>
+      <h4>
+        <a href="{{ url_for('doctor', DoctorID=doctor.DoctorID) }}">Doctor: {{ doctor['FirstName'] }} {{ doctor['LastName'] }}</a>
+      </h4>
+      <h4>
+        <a href="{{ url_for('appointment', AppointmentID=treatment.TreatmentID) }}">Appointment #{{ appointment['AppointmentID'] }}</a>
+      </h4>
+      <h4>
+        <a href="{{ url_for('patient', patientssn=appointment.PatientSSN) }}">Patient: {{ appointment['FirstName'] }} {{ appointment['LastName'] }}</a>
+      </h4>
+      <h4>
+        <a href="{{ url_for('treatmentplan', TreatmentID=treatment.TreatmentID) }}">Treatment Plan: {{ treatment['TreatmentID'] }} </a>
+      </h4>
       <p>Treatment Description: {{ treat['Description'] }}</p>
 
     </div>
@@ -24,7 +34,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete Doctors?</h5>
+          <h5 class="modal-title" id="deleteModalLabel">Delete Treatment Log?</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

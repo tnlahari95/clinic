@@ -4,32 +4,13 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-	<style>
-		.flex-container 
-		{
-		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-		justify-content:space-between;
-		text-align: left;
-		}
-
-		.flex-container > div 
-		{
-		margin: 10px;
-
-		}
-	</style>
-
     {% if title %}
-        <title>Patient - {{ title }}</title>
+        <title>Clinic - {{ title }}</title>
     {% else %}
-        <title>Patient</title>
+        <title>Clinic</title>
     {% endif %}
 </head>
 <body>
@@ -93,7 +74,7 @@
                   <a href="{{ url_for('new_appointment') }}">New Appointment</a>
                 </li>
                 <li class="list-group-item list-group-item-light">
-				<a href="{{ url_for('new_treatmentplan') }}">New Treatmentplan</a>
+				<a href="{{ url_for('new_treatmentplan') }}">New Treatment Plan</a>
 				</li>
                 <li class="list-group-item list-group-item-light">
 				<a href="{{ url_for('new_treat') }}">New Treatment Log</a>

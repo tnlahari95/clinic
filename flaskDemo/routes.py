@@ -25,7 +25,7 @@ def home():
           .join(Doctor, Doctor.DoctorID == Treats.DoctorID)\
           .join(Appointment, Appointment.AppointmentID == Treats.AppointmentID)
         
-    return render_template('dept_home.html', outString=res2)
+    return render_template('home.html', outString=res2)
 
 @app.route("/invoices")
 @login_required
@@ -53,8 +53,11 @@ def invoices():
 @app.route("/treat/<TreatmentID>/<AppointmentID>/<DoctorID>")
 @login_required
 def treat(TreatmentID, AppointmentID, DoctorID):
-    treat = Treats.query.get_or_404([TreatmentID,AppointmentID,DoctorID])
-    return render_template('treat.html', treat=treat)
+    treat = Treats.query.get_or_404([TreatmentID, AppointmentID, DoctorID])
+    doctor = Doctor.query.get_or_404(DoctorID)
+    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN).add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName).first()
+    treatment = TreatmentPlan.query.get_or_404(TreatmentID)
+    return render_template('treat.html', treat=treat, doctor=doctor, appointment=appointment, treatment=treatment)
 
 @app.route("/treat/new", methods=['GET', 'POST'])
 @login_required

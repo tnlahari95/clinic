@@ -95,30 +95,14 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('That email is taken. Please choose a different one.')
 
 class DoctorCreateForm(FlaskForm):
-    DoctorID = IntegerField('Doctor ID', validators=[DataRequired()])
+    DoctorID = IntegerField('Doctor ID:', validators=[DataRequired()])
     FirstName = StringField('First Name:', validators=[DataRequired()])
     LastName = StringField('Last Name:', validators=[DataRequired()])
     Speciality = StringField('Speciality:', validators=[DataRequired()])
     submit = SubmitField('Create')
 
 class DoctorUpdateForm(DoctorCreateForm):
-    DoctorID = IntegerField('Doctor ID:', validators=[DataRequired()])
-    FirstName = StringField('First Name:', validators=[DataRequired()] )
-    LastName = StringField('last Name:', validators=[DataRequired()] )
-    Speciality = StringField('Speciality:', validators=[DataRequired()] )
     submit = SubmitField('Update')
-
-
-
-#class DeptForm(DeptUpdateForm):
-
-#    dnumber=IntegerField('Department Number', validators=[DataRequired()])
-#    submit = SubmitField('Add this department')
-
-#    def validate_dnumber(self, dnumber):    #because dnumber is primary key and should be unique
-#        dept = Department.query.filter_by(dnumber=dnumber.data).first()
-#        if dept:
-#            raise ValidationError('That department number is taken. Please choose a different one.')
 
 class PatientCreateForm(FlaskForm):
     patientssn = IntegerField('Patient SSN', validators=[DataRequired()])
@@ -130,14 +114,11 @@ class PatientCreateForm(FlaskForm):
     submit = SubmitField('Create')
 
 class PatientUpdateForm(PatientCreateForm):
-    patientssn = IntegerField('Patient SSN', validators=[DataRequired()])
-    #, render_kw={'readonly': True}
     submit = SubmitField('Update')
     
 class AppointmentCreateForm(FlaskForm):
     patients = Patient.query.with_entities(Patient.PatientSSN, Patient.FirstName, Patient.LastName).distinct()
-    #appointments=Appointment.query.with_entities(Appointment.AppointmentID)
-    choices = [(row[0],row[0]) for row in patients]
+    choices = [(row[0], row[1] + " " + row[2]) for row in patients]
 
     appointmentid = IntegerField('Appointment ID', validators=[DataRequired()])
     patient = SelectField('Patient', choices=choices, validators=[DataRequired()])
@@ -148,48 +129,25 @@ class AppointmentCreateForm(FlaskForm):
     submit = SubmitField('Create')
 
 class AppointmentUpdateForm(AppointmentCreateForm):
-    
-    patients = Patient.query.with_entities(Patient.PatientSSN, Patient.FirstName, Patient.LastName).distinct()
-    #appointments=Appointment.query.with_entities(Appointment.AppointmentID)
-    choices = [(row[0],row[0]) for row in patients]
-    
-    appointmentid = IntegerField('Appointment ID', validators=[DataRequired()])
-    patient = IntegerField('Patient', validators=[DataRequired()])
-    date = DateField('Date', validators=[DataRequired()])
-    time = TimeField('Time', validators=[DataRequired()])
-    
-                                 #,  choices=choices, render_kw={'readonly': True})
     submit = SubmitField('Update')
     
     
 class TreatmentplanCreateForm(FlaskForm):
     TreatmentID = IntegerField('TreatmentID', validators=[DataRequired()])
     TreatmentCost = StringField('TreatmentCost:')
-    Is_Trauma = IntegerField('Is trauma:')
+    Is_Trauma = BooleanField('Is trauma:')
     Measures_taken = StringField('Measures taken:')
-    Is_Medication = IntegerField('Is medication:')
+    Is_Medication = BooleanField('Is medication:')
     Medicine_name = StringField('Medicine name:')
     Dosage = StringField('Dosage')
-    Is_councelling = IntegerField('Is Councelling:')
+    Is_councelling = BooleanField('Is Councelling:')
     Councelling_Feedback = StringField('Councelling Feedback:')
-    Is_therapy = IntegerField('Is therapy:')
-    Therapy_Outcome = StringField('therapy outcome:')
+    Is_therapy = BooleanField('Is therapy:')
+    Therapy_Outcome = StringField('Therapy Outcome:')
     
     submit = SubmitField('Create')
 
 class TreatmentplanUpdateForm(TreatmentplanCreateForm):
-    TreatmentID = IntegerField('TreatmentID', validators=[DataRequired()])
-    TreatmentCost = StringField('TreatmentCost:')
-    Is_Trauma = IntegerField('Is trauma:')
-    Measures_taken = StringField('Measures taken:')
-    Is_Medication = IntegerField('Is medication:')
-    Medicine_name = StringField('Medicine name:')
-    Dosage = StringField('Dosage:')
-    Is_councelling = IntegerField('Is Councelling:')
-    Councelling_Feedback = StringField('Councelling Feedback:')
-    Is_therapy = IntegerField('Is therapy:')
-    Therapy_Outcome = StringField('therapy outcome:')
-    
     submit = SubmitField('Update')
     
 class TreatCreateForm(FlaskForm):
@@ -201,9 +159,4 @@ class TreatCreateForm(FlaskForm):
     submit = SubmitField('Create')
 
 class TreatUpdateForm(TreatCreateForm):
-    TreatmentID = IntegerField('TreatmentID', validators=[DataRequired()])
-    AppointmentID = IntegerField('AppointmentID:', validators=[DataRequired()])
-    DoctorID = IntegerField('DoctorID:', validators=[DataRequired()])
-    Description = StringField('Description:', validators=[DataRequired()])
-    
     submit = SubmitField('Update')
