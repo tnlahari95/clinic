@@ -55,7 +55,9 @@ def invoices():
 def treat(TreatmentID, AppointmentID, DoctorID):
     treat = Treats.query.get_or_404([TreatmentID, AppointmentID, DoctorID])
     doctor = Doctor.query.get_or_404(DoctorID)
-    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN).add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName).first()
+    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+                    .filter(Appointment.AppointmentID == AppointmentID)\
+                    .add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName).first()
     treatment = TreatmentPlan.query.get_or_404(TreatmentID)
     return render_template('treat.html', treat=treat, doctor=doctor, appointment=appointment, treatment=treatment)
 
@@ -88,8 +90,8 @@ def update_treat(TreatmentID, AppointmentID, DoctorID):
         return redirect(url_for('treat', TreatmentID=treat.TreatmentID, AppointmentID=treat.AppointmentID, DoctorID=treat.DoctorID))
     elif request.method == 'GET':
         form.TreatmentID.data = treat.TreatmentID
-        form.AppointmentID.data =treat.AppointmentID
-        form.DoctorID.data= treat.DoctorID
+        form.AppointmentID.data = treat.AppointmentID
+        form.DoctorID.data = treat.DoctorID
         form.Description.data = treat.Description
     
     return render_template('create_treat.html', title='Update Treat', form=form, legend='Update Treat')
@@ -102,10 +104,6 @@ def delete_treat(TreatmentID, AppointmentID, DoctorID):
     db.session.commit()
     flash('The treat has been deleted!', 'success')
     return redirect(url_for('home'))
-
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -202,27 +200,6 @@ def new_doctor():
         flash('You have added a new doctor!', 'success')
         return redirect(url_for('doctors'))
     return render_template('create_doctor.html', title='New Doctor', form=form, legend='New Doctor')
-
-#@app.route("/doctors/<doctorid>/update", methods=['GET', 'POST'])
-#@login_required
-#def update_doctor(doctorid):
- #   doctor = Doctor.query.get_or_404(doctorid)
-
-  #  form = DoctorUpdateForm()
-   # if form.validate_on_submit():
-    #    doctor.DoctorID = form.doctorid.data
-     #   doctor.FirstName = form.first_name.data
-      #  doctor.LastName = form.last_name.data
-       # doctor.Speciality = form.speciality.data
-        #db.session.commit()
-        #flash('The doctor has been updated!', 'success')
-        #return redirect(url_for('doctor', doctorid=doctorid))
-    #elif request.method == 'GET':
-     #   form.doctorid.data = doctor.DoctorID
-      #  form.first_name.data = doctor.FirstName
-       # form.last_name.data = doctor.LastName
-        #form.speciality.data = doctor.Speciality
-    #return render_template('create_doctor.html', title='Update Doctor', form=form, legend='Update Doctor')
 
 @app.route("/doctors/<DoctorID>/update", methods=['GET', 'POST'])
 @login_required

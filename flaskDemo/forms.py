@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, DateField, TimeField, SelectField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, DateField, TimeField, SelectField, HiddenField, DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError,Regexp
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from flaskDemo import db
@@ -115,7 +115,8 @@ class PatientCreateForm(FlaskForm):
 
 class PatientUpdateForm(PatientCreateForm):
     submit = SubmitField('Update')
-    
+
+
 class AppointmentCreateForm(FlaskForm):
     patients = Patient.query.with_entities(Patient.PatientSSN, Patient.FirstName, Patient.LastName).distinct()
     choices = [(row[0], row[1] + " " + row[2]) for row in patients]
@@ -129,12 +130,13 @@ class AppointmentCreateForm(FlaskForm):
     submit = SubmitField('Create')
 
 class AppointmentUpdateForm(AppointmentCreateForm):
+    patient = IntegerField('Patient', validators=[DataRequired()])
     submit = SubmitField('Update')
     
     
 class TreatmentplanCreateForm(FlaskForm):
     TreatmentID = IntegerField('TreatmentID', validators=[DataRequired()])
-    TreatmentCost = StringField('TreatmentCost:')
+    TreatmentCost = DecimalField('TreatmentCost:')
     Is_Trauma = BooleanField('Is trauma:')
     Measures_taken = StringField('Measures taken:')
     Is_Medication = BooleanField('Is medication:')
@@ -169,4 +171,7 @@ class TreatCreateForm(FlaskForm):
     submit = SubmitField('Create')
 
 class TreatUpdateForm(TreatCreateForm):
+    TreatmentID = IntegerField('Treatment', validators=[DataRequired()])
+    AppointmentID = IntegerField('Appointment', validators=[DataRequired()])
+    DoctorID = IntegerField('Doctor', validators=[DataRequired()])
     submit = SubmitField('Update')

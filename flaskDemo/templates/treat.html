@@ -17,7 +17,7 @@
         <a href="{{ url_for('doctor', DoctorID=doctor.DoctorID) }}">Doctor: {{ doctor['FirstName'] }} {{ doctor['LastName'] }}</a>
       </h4>
       <h4>
-        <a href="{{ url_for('appointment', AppointmentID=treatment.TreatmentID) }}">Appointment #{{ appointment['AppointmentID'] }}</a>
+        <a href="{{ url_for('appointment', AppointmentID=treat.AppointmentID) }}">Appointment #{{ treat['AppointmentID'] }}</a>
       </h4>
       <h4>
         <a href="{{ url_for('patient', patientssn=appointment.PatientSSN) }}">Patient: {{ appointment['FirstName'] }} {{ appointment['LastName'] }}</a>
