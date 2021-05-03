@@ -14,7 +14,7 @@
       </div>
 
       <h4>
-        <a href="{{ url_for('doctor', DoctorID=doctor.DoctorID) }}">Doctor: {{ doctor['FirstName'] }} {{ doctor['LastName'] }}</a>
+        <a href="{{ url_for('treatmentplan', TreatmentID=treatment.TreatmentID) }}">Treatment Plan: {{ treatment['TreatmentID'] }} </a>
       </h4>
       <h4>
         <a href="{{ url_for('appointment', AppointmentID=treat.AppointmentID) }}">Appointment #{{ treat['AppointmentID'] }}</a>
@@ -23,7 +23,7 @@
         <a href="{{ url_for('patient', patientssn=appointment.PatientSSN) }}">Patient: {{ appointment['FirstName'] }} {{ appointment['LastName'] }}</a>
       </h4>
       <h4>
-        <a href="{{ url_for('treatmentplan', TreatmentID=treatment.TreatmentID) }}">Treatment Plan: {{ treatment['TreatmentID'] }} </a>
+        <a href="{{ url_for('doctor', DoctorID=doctor.DoctorID) }}">Doctor: {{ doctor['FirstName'] }} {{ doctor['LastName'] }}</a>
       </h4>
       <p>Treatment Description: {{ treat['Description'] }}</p>
 

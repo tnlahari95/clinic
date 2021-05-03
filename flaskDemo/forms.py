@@ -8,43 +8,6 @@ from flaskDemo import db
 from flaskDemo.models import Appointment, Doctor, Patient, TreatmentPlan, Treats, User
 from wtforms.fields.html5 import DateField
 
-
-did = Treats.query.with_entities(Treats.DoctorID)
-dChoices2 = [(row[0],row[0]) for row in did]  # change
-results=list()
-for row in did:
-    rowDict=row._asdict()
-    results.append(rowDict)
-dChoices = [(row['DoctorID'],row['DoctorID']) for row in results]
-regex1='^((((19|20)(([02468][048])|([13579][26]))-02-29))|((20[0-9][0-9])|(19[0-9][0-9]))-((((0[1-9])'
-regex2='|(1[0-2]))-((0[1-9])|(1\d)|(2[0-8])))|((((0[13578])|(1[02]))-31)|(((0[1,3-9])|(1[0-2]))-(29|30)))))$'
-regex=regex1 + regex2
-
-
-tid = Treats.query.with_entities(Treats.TreatmentID)
-tChoices2 = [(row[0],row[0]) for row in tid]  # change
-results=list()
-for row in tid:
-    rowDict=row._asdict()
-    results.append(rowDict)
-tChoices = [(row['TreatmentID'],row['TreatmentID']) for row in results]
-regex1='^((((19|20)(([02468][048])|([13579][26]))-02-29))|((20[0-9][0-9])|(19[0-9][0-9]))-((((0[1-9])'
-regex2='|(1[0-2]))-((0[1-9])|(1\d)|(2[0-8])))|((((0[13578])|(1[02]))-31)|(((0[1,3-9])|(1[0-2]))-(29|30)))))$'
-regex=regex1 + regex2
-
-aid = Treats.query.with_entities(Treats.AppointmentID)
-aChoices2 = [(row[0],row[0]) for row in aid]  # change
-results=list()
-for row in aid:
-    rowDict=row._asdict()
-    results.append(rowDict)
-aChoices = [(row['AppointmentID'],row['AppointmentID']) for row in results]
-regex1='^((((19|20)(([02468][048])|([13579][26]))-02-29))|((20[0-9][0-9])|(19[0-9][0-9]))-((((0[1-9])'
-regex2='|(1[0-2]))-((0[1-9])|(1\d)|(2[0-8])))|((((0[13578])|(1[02]))-31)|(((0[1,3-9])|(1[0-2]))-(29|30)))))$'
-regex=regex1 + regex2
-
-
-
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=2, max=20)])
@@ -118,19 +81,22 @@ class PatientUpdateForm(PatientCreateForm):
 
 
 class AppointmentCreateForm(FlaskForm):
-    patients = Patient.query.with_entities(Patient.PatientSSN, Patient.FirstName, Patient.LastName).distinct()
-    choices = [(row[0], row[1] + " " + row[2]) for row in patients]
-
     appointmentid = IntegerField('Appointment ID', validators=[DataRequired()])
-    patient = SelectField('Patient', choices=choices, validators=[DataRequired()])
+    patient = SelectField('Patient', coerce=int, validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
     time = TimeField('Time', validators=[DataRequired()])
     is_emergency = BooleanField('Is Emergency')
     reason = TextAreaField('Reason')
     submit = SubmitField('Create')
 
+    def __init__(self, *args, **kwargs):
+        super(AppointmentCreateForm, self).__init__(*args, **kwargs)
+        self.patient.choices = [
+            (a.PatientSSN, a.FirstName + " " + a.LastName)
+            for a in Patient.query.with_entities(Patient.PatientSSN, Patient.FirstName, Patient.LastName).distinct().order_by(Patient.FirstName)
+        ]
+
 class AppointmentUpdateForm(AppointmentCreateForm):
-    patient = IntegerField('Patient', validators=[DataRequired()])
     submit = SubmitField('Update')
     
     
@@ -153,25 +119,30 @@ class TreatmentplanUpdateForm(TreatmentplanCreateForm):
     submit = SubmitField('Update')
     
 class TreatCreateForm(FlaskForm):
-    treatments = TreatmentPlan.query.with_entities(TreatmentPlan.TreatmentID).distinct()
-    treatmentchoices = [(row[0], row[0]) for row in treatments]
-
-    appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                            .with_entities(Appointment.AppointmentID, Patient.FirstName, Patient.LastName).order_by(Appointment.AppointmentID)
-    appointmentchoices = [(row[0], str(row[0]) + " - " + row[1] + " " + row[2]   ) for row in appointments]
-
     doctors = Patient.query.with_entities(Doctor.DoctorID, Doctor.FirstName, Doctor.LastName).distinct()
     doctorchoices = [(row[0],row[1] + " " + row[2]) for row in doctors]
 
-    TreatmentID = SelectField('Treatment', choices=treatmentchoices, validators=[DataRequired()])
-    AppointmentID = SelectField('Appointment', choices=appointmentchoices, validators=[DataRequired()])
-    DoctorID = SelectField('Doctor', choices=doctorchoices, validators=[DataRequired()])
+    TreatmentID = SelectField('Treatment', coerce=int, validators=[DataRequired()])
+    AppointmentID = SelectField('Appointment', coerce=int, validators=[DataRequired()])
+    DoctorID = SelectField('Doctor', coerce=int, validators=[DataRequired()])
     Description = StringField('Description:', validators=[DataRequired()])
-
     submit = SubmitField('Create')
 
+    def __init__(self, *args, **kwargs):
+        super(TreatCreateForm, self).__init__(*args, **kwargs)
+        self.TreatmentID.choices = [
+            (a.TreatmentID, a.TreatmentID)
+            for a in TreatmentPlan.query.with_entities(TreatmentPlan.TreatmentID).distinct()
+        ]
+        self.AppointmentID.choices = [
+            (a.AppointmentID, str(a.AppointmentID) + " - " + a.FirstName + " " + a.LastName)
+            for a in Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+                            .with_entities(Appointment.AppointmentID, Patient.FirstName, Patient.LastName).order_by(Appointment.AppointmentID)
+        ]
+        self.DoctorID.choices = [
+            (a.DoctorID, a.FirstName + " " + a.LastName)
+            for a in Doctor.query.with_entities(Doctor.DoctorID, Doctor.FirstName, Doctor.LastName).distinct()
+        ]
+
 class TreatUpdateForm(TreatCreateForm):
-    TreatmentID = IntegerField('Treatment', validators=[DataRequired()])
-    AppointmentID = IntegerField('Appointment', validators=[DataRequired()])
-    DoctorID = IntegerField('Doctor', validators=[DataRequired()])
     submit = SubmitField('Update')
