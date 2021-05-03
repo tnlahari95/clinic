@@ -85,7 +85,7 @@ def update_treat(TreatmentID, AppointmentID, DoctorID):
       
         db.session.commit()
         flash('The treat has been updated!', 'success')
-        return redirect(url_for('treat', TreatmentID=TreatmentID, AppointmentID=AppointmentID, DoctorID=DoctorID))
+        return redirect(url_for('treat', TreatmentID=treat.TreatmentID, AppointmentID=treat.AppointmentID, DoctorID=treat.DoctorID))
     elif request.method == 'GET':
         form.TreatmentID.data = treat.TreatmentID
         form.AppointmentID.data =treat.AppointmentID

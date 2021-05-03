@@ -151,9 +151,19 @@ class TreatmentplanUpdateForm(TreatmentplanCreateForm):
     submit = SubmitField('Update')
     
 class TreatCreateForm(FlaskForm):
-    TreatmentID = IntegerField('TreatmentID', validators=[DataRequired()])
-    AppointmentID = IntegerField('AppointmentID:', validators=[DataRequired()])
-    DoctorID = IntegerField('DoctorID:', validators=[DataRequired()])
+    treatments = TreatmentPlan.query.with_entities(TreatmentPlan.TreatmentID).distinct()
+    treatmentchoices = [(row[0], row[0]) for row in treatments]
+
+    appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+                            .with_entities(Appointment.AppointmentID, Patient.FirstName, Patient.LastName).order_by(Appointment.AppointmentID)
+    appointmentchoices = [(row[0], str(row[0]) + " - " + row[1] + " " + row[2]   ) for row in appointments]
+
+    doctors = Patient.query.with_entities(Doctor.DoctorID, Doctor.FirstName, Doctor.LastName).distinct()
+    doctorchoices = [(row[0],row[1] + " " + row[2]) for row in doctors]
+
+    TreatmentID = SelectField('Treatment', choices=treatmentchoices, validators=[DataRequired()])
+    AppointmentID = SelectField('Appointment', choices=appointmentchoices, validators=[DataRequired()])
+    DoctorID = SelectField('Doctor', choices=doctorchoices, validators=[DataRequired()])
     Description = StringField('Description:', validators=[DataRequired()])
 
     submit = SubmitField('Create')

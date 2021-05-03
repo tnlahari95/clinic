@@ -1,34 +1,33 @@
-{% extends "layout.html" %}
-{% block content %}
- {% for row in outString1 %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-			
-			<div class="flex-container">
-			
-			<div>
-              <p style= "color: purple"> Patient Name: {{row['FirstName']}} {{row['LastName']}}</p>
-			</div>
-			
-			<div>
-			  <p>AppointmentID: {{row['AppointmentID']}}<br>Date: {{row['Date']}}<br>Time: {{row['Time']}}</p> 
-            </div>
-			
-			</div>
-			
-			</div>
-			
-			<div class="article-metadata">
-				<p>Reason: {{row['Reason']}}</p>
-			</div>
-			<div class="article-metadata">
-				<p>Doctor's Description: {{row['Description']}}</p>
-			</div>
-				<p>Treatment Plan: {{row['Medicine_name']}}<br>Treatment Cost($): {{row['TreatmentCost']}}</p>
-			
-		</div>
-		
-        </article>
-     {% endfor %}
-{% endblock content %}
+{% extends "layout.html" %} {% block content %} {% for row in outString1 %}
+<article class="media content-section">
+  <div class="media-body">
+    <div class="article-metadata">
+      <div class="flex-container">
+        <div>
+          <p style="color: purple">
+            Patient Name: {{row['FirstName']}} {{row['LastName']}}
+          </p>
+        </div>
+
+        <div>
+          <p>
+            AppointmentID: {{row['AppointmentID']}}<br />Date:
+            {{row['Date']}}<br />Time: {{row['Time']}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-metadata">
+      <p>Reason: {{row['Reason']}}</p>
+    </div>
+    <div class="article-metadata">
+      <p>Doctor's Description: {{row['Description']}}</p>
+    </div>
+    <p>
+      Treatment Plan: {{row['Medicine_name']}}<br />Treatment Cost($):
+      {{row['TreatmentCost']}}
+    </p>
+  </div>
+</article>
+{% endfor %} {% endblock content %}
