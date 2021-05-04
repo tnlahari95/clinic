@@ -246,7 +246,23 @@ def patients():
 @login_required
 def patient(patientssn):
     patient = Patient.query.get_or_404(patientssn)
-    return render_template('patient.html', title="patient", patient=patient)
+    try:
+        conn = mysql.connector.connect(
+            host='192.168.64.2', port='3306', database='patient', 
+            user='dustin', password='password'
+        )
+        if conn.is_connected():
+            cursor = conn.cursor()
+        else:
+            return('error when connecting to mysql server')
+        cursor.execute("SELECT * FROM Appointment WHERE PatientSSN=" + patientssn)
+        appointments = cursor.fetchall()
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+    
+    return render_template('patient.html', title="patient", patient=patient, appointments=appointments)
 
 @app.route("/patients/new", methods=['GET', 'POST'])
 @login_required

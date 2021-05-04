@@ -18,6 +18,19 @@
       <p>Gender: {{ patient['Gender'] }}</p>
       <p>Address: {{ patient['Address'] }}</p>
       <p>Contact Number: {{ patient['ContactNumber'] }}</p>
+      <h4>All Appointments</h4>
+      {% if appointments %}
+        <ul>
+          {% for appointment in appointments %}
+            <li>
+              <a href="/appointments/{{appointment[0]}}">
+                Appointment #{{appointment[0]}} ({{appointment[2]}} at {{appointment[3]}})</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>None</p>
+      {% endif %}
 
     </div>
   </article>
