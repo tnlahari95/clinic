@@ -15,7 +15,7 @@
 </head>
 <body>
     <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <nav class="navbar navbar-expand-md navbar-dark bg-success fixed-top">
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Clinic</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,22 +23,21 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('home') }}">Treatment Log</a>
-          
-              <a class="nav-item nav-link" href="{{ url_for('doctors') }}">Doctors</a>
-              <a class="nav-item nav-link" href="{{ url_for('patients') }}">Patients</a>
-			  <a class="nav-item nav-link" href="{{ url_for('appointments') }}">Appointments</a>
-			  <a class="nav-item nav-link" href="{{ url_for('treatmentplans') }}">Treatment Plans</a>
-			    <a class="nav-item nav-link" href="{{url_for('invoices')}}">Invoice</a>
+              <a class="nav-item nav-link{% if active_page == 'treats' %} active{% endif %}" href="{{ url_for('home') }}">Treatment Log</a>
+              <a class="nav-item nav-link{% if active_page == 'doctors' %} active{% endif %}" href="{{ url_for('doctors') }}">Doctors</a>
+              <a class="nav-item nav-link{% if active_page == 'patients' %} active{% endif %}" href="{{ url_for('patients') }}">Patients</a>
+              <a class="nav-item nav-link{% if active_page == 'appointments' %} active{% endif %}" href="{{ url_for('appointments') }}">Appointments</a>
+              <a class="nav-item nav-link{% if active_page == 'treatmentplans' %} active{% endif %}" href="{{ url_for('treatmentplans') }}">Treatment Plans</a>
+              <a class="nav-item nav-link{% if active_page == 'invoices' %} active{% endif %}" href="{{url_for('invoices')}}">Invoices</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+                <a class="nav-item nav-link{% if active_page == 'account' %} active{% endif %}" href="{{ url_for('account') }}">Account</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+                <a class="nav-item nav-link{% if active_page == 'login' %} active{% endif %}" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link{% if active_page == 'register' %} active{% endif %}" href="{{ url_for('register') }}">Register</a>
               {% endif %}
             </div>
           </div>

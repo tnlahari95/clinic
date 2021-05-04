@@ -1,4 +1,7 @@
-{% extends "layout.html" %} {% block content %} {% for row in outString1 %}
+{% extends "layout.html" %} 
+{% set active_page = "invoices" %}
+{% block content %} 
+{% for row in outString1 %}
 <article class="media content-section">
   <div class="media-body">
     <div class="article-metadata pb-2">
