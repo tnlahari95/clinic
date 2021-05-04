@@ -507,13 +507,15 @@ def doctorinfo():
             cursor = conn.cursor()
         else:
             return ('error when connecting to mysql server')
-        cursor.execute("SELECT treats.DoctorID,COUNT(appointment.PatientSSN),doctor.LastName\
+        sql="SELECT treats.DoctorID,COUNT(appointment.PatientSSN),doctor.LastName\
                         FROM treats,appointment,doctor\
                         WHERE treats.AppointmentID = appointment.AppointmentID AND treats. DoctorID = doctor.DoctorID\
-                        GROUP BY DoctorID")
-        returnCount = cursor.fetchone()[0]
+                        GROUP BY DoctorID"
+        cursor.execute(sql)
+        returnCount = cursor.fetchall()
     except Error as e:
-        print(e)
+        for e in returnCount:
+            print(e)
     finally:
         conn.close()
     return render_template('doctorinfo.html', outString1=doctorinfo)
