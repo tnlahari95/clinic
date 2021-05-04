@@ -493,3 +493,27 @@ def invoices():
                                                 Appointment.Time, Appointment.Reason, Doctor.DoctorID)
                 
     return render_template('invoices.html', outString1=resultsinvoice)
+
+@app.route("/doctorinfo")
+@login_required
+def doctorinfo():
+    doctorinfo = Doctor.query.all()
+    try:
+        conn = mysql.connector.connect(
+            host='192.168.64.2', port='3306', database='patient',
+            user='dustin', password='password'
+        )
+        if conn.is_connected():
+            cursor = conn.cursor()
+        else:
+            return ('error when connecting to mysql server')
+        cursor.execute("SELECT treats.DoctorID,COUNT(appointment.PatientSSN),doctor.LastName\
+                        FROM treats,appointment,doctor\
+                        WHERE treats.AppointmentID = appointment.AppointmentID AND treats. DoctorID = doctor.DoctorID\
+                        GROUP BY DoctorID")
+        returnCount = cursor.fetchone()[0]
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+    return render_template('doctorinfo.html', outString1=doctorinfo)

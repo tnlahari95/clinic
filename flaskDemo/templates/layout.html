@@ -29,6 +29,7 @@
               <a class="nav-item nav-link{% if active_page == 'appointments' %} active{% endif %}" href="{{ url_for('appointments') }}">Appointments</a>
               <a class="nav-item nav-link{% if active_page == 'treatmentplans' %} active{% endif %}" href="{{ url_for('treatmentplans') }}">Treatment Plans</a>
               <a class="nav-item nav-link{% if active_page == 'invoices' %} active{% endif %}" href="{{url_for('invoices')}}">Invoices</a>
+              <a class ="nav-item nav-link{% if active_page == 'doctorinfo' %} active {% endif %}" href="{{url_for('doctorinfo')}}">Doctor-Patient Treatment Info</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
