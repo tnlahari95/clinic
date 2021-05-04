@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskDemo import app, db, bcrypt
-from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, DoctorCreateForm, DoctorUpdateForm, PatientCreateForm, PatientUpdateForm, TreatmentplanCreateForm, TreatmentplanUpdateForm, TreatCreateForm, TreatUpdateForm, AppointmentCreateForm, AppointmentUpdateForm
+from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, DoctorCreateForm, DoctorUpdateForm, PatientCreateForm, PatientUpdateForm, TreatmentPlanCreateForm, TreatmentPlanUpdateForm, TreatCreateForm, TreatUpdateForm, AppointmentCreateForm, AppointmentUpdateForm
 from flaskDemo.models import Appointment, Doctor, Patient, TreatmentPlan, Treats, User
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
@@ -11,44 +11,13 @@ from datetime import datetime
 
 @app.route("/")
 @app.route("/home")
-def home():
-    #results = Treats.query.all()
-    
-    #resultsinvoice = Treats.query.join(TreatmentPlan,Treats.TreatmentID == TreatmentPlan.TreatmentID)\
-     #           .add_columns(TreatmentPlan.TreatmentCost, Treats.Description, TreatmentPlan.Medicine_name)\
-      #          .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
-       #         .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-        #        .add_columns(Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, Appointment.Time, Appointment.Reason)
-                
+def home():  
       
-    res2 = Treats.query.join(TreatmentPlan, Treats.TreatmentID == Treats.TreatmentID)\
+    treats = Treats.query.join(TreatmentPlan, Treats.TreatmentID == Treats.TreatmentID)\
           .join(Doctor, Doctor.DoctorID == Treats.DoctorID)\
           .join(Appointment, Appointment.AppointmentID == Treats.AppointmentID)
         
-    return render_template('home.html', outString=res2)
-
-@app.route("/invoices")
-@login_required
-def invoices():  
-    resultsinvoice = Treats.query.join(TreatmentPlan,Treats.TreatmentID == TreatmentPlan.TreatmentID)\
-                    .add_columns(TreatmentPlan.TreatmentCost, Treats.Description, TreatmentPlan.Medicine_name)\
-                    .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
-                    .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                    .add_columns(Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, Appointment.Time, Appointment.Reason)
-                
-    return render_template('invoices.html', outString1=resultsinvoice)
-
-   # resultsinvoice = Appointment.query.join(Patient,Appointment.PatientSSN == Patient.PatientSSN) \
-    #         .add_columns(Appointment.PatientSSN, Patient.FirstName, Patient.LastName, Patient.Address) \
-     #        .join(Doctor, Treats.DoctorID == Doctor.DoctorID).add_columns(Treats.DoctorID)\
-      #          .join(TreatmentPlan, Treats.TreatmentID == TreatmentPlan.TreatmentID).add_columns(Treats.TreatmentID, Treats.Description,TreatmentPlan.TreatmentCost)\
-       #         .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID).add_columns(Treats.AppointmentID)
-                
-    #return render_template('invoice.html', title='invoice', outString1=resultsinvoice)
-                
-    #results = Faculty.query.join(Qualified,Faculty.facultyID == Qualified.facultyID) \
-     #         .add_columns(Faculty.facultyID, Faculty.facultyName, Qualified.Datequalified, Qualified.courseID)
-    #return render_template('join.html', title='Join',joined_1_n=results, joined_m_n=results2)
+    return render_template('home.html', title="Treatment Logs", outString=treats)
 
 @app.route("/treat/<TreatmentID>/<AppointmentID>/<DoctorID>")
 @login_required
@@ -357,7 +326,7 @@ def delete_appointment(AppointmentID):
 @app.route("/treatmentplans")
 def treatmentplans():
     treatmentplans = TreatmentPlan.query.all()
-    return render_template('treatmentplans.html', title="Treatmentplan", outString=treatmentplans)
+    return render_template('treatmentplans.html', title="Treatment Plan", outString=treatmentplans)
 
 @app.route("/treatmentplans/<TreatmentID>")
 @login_required
@@ -368,7 +337,7 @@ def treatmentplan(TreatmentID):
 @app.route("/treatmentplans/new", methods=['GET', 'POST'])
 @login_required
 def new_treatmentplan():
-    form = TreatmentplanCreateForm()
+    form = TreatmentPlanCreateForm()
     if form.validate_on_submit():
         treatmentplan = TreatmentPlan(TreatmentID=form.TreatmentID.data,TreatmentCost=form.TreatmentCost.data,\
                         Is_Medication=form.Is_Medication.data,\
@@ -381,14 +350,14 @@ def new_treatmentplan():
         db.session.commit()
         flash('You have added a new treatmentplan!', 'success')
         return redirect(url_for('treatmentplans'))
-    return render_template('create_treatmentplan.html', title='New Treatmentplan', form=form, legend='New Treatmentplan')
+    return render_template('create_treatmentplan.html', title='New Treatment Plan', form=form, legend='New Treatment Plan')
 
 @app.route("/treatmentplans/<TreatmentID>/update", methods=['GET', 'POST'])
 @login_required
 def update_treatmentplan(TreatmentID):
     treatmentplan = TreatmentPlan.query.get_or_404(TreatmentID)
 
-    form = TreatmentplanUpdateForm()
+    form = TreatmentPlanUpdateForm()
     if form.validate_on_submit():
         treatmentplan.TreatmentID = form.TreatmentID.data
         treatmentplan.TreatmentCost = form.TreatmentCost.data
@@ -418,7 +387,7 @@ def update_treatmentplan(TreatmentID):
         form.Is_therapy.data=treatmentplan.Is_therapy
         form.Therapy_Outcome.data=treatmentplan.Therapy_Outcome
               
-    return render_template('create_treatmentplan.html', title='Update Treatmentplan', form=form, legend='Update Treatmentplan')
+    return render_template('create_treatmentplan.html', title='Update Treatment Plan', form=form, legend='Update Treatment Plan')
 
 @app.route("/treatmentplans/<TreatmentID>/delete", methods=['POST'])
 @login_required
@@ -430,5 +399,27 @@ def delete_treatmentplan(TreatmentID):
     return redirect(url_for('treatmentplans'))
 
 
+@app.route("/invoices")
+@login_required
+def invoices():  
+    resultsinvoice = Treats.query.join(TreatmentPlan, Treats.TreatmentID == TreatmentPlan.TreatmentID)\
+                                 .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
+                                 .join(Doctor, Treats.DoctorID == Doctor.DoctorID)\
+                                 .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
+                                 .add_columns(TreatmentPlan.TreatmentCost, Treats.TreatmentID, Treats.Description, TreatmentPlan.Medicine_name, 
+                                                Patient.PatientSSN, Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, 
+                                                Appointment.Time, Appointment.Reason, Doctor.DoctorID)
+                
+    return render_template('invoices.html', outString1=resultsinvoice)
 
-
+   # resultsinvoice = Appointment.query.join(Patient,Appointment.PatientSSN == Patient.PatientSSN) \
+    #         .add_columns(Appointment.PatientSSN, Patient.FirstName, Patient.LastName, Patient.Address) \
+     #        .join(Doctor, Treats.DoctorID == Doctor.DoctorID).add_columns(Treats.DoctorID)\
+      #          .join(TreatmentPlan, Treats.TreatmentID == TreatmentPlan.TreatmentID).add_columns(Treats.TreatmentID, Treats.Description,TreatmentPlan.TreatmentCost)\
+       #         .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID).add_columns(Treats.AppointmentID)
+                
+    #return render_template('invoice.html', title='invoice', outString1=resultsinvoice)
+                
+    #results = Faculty.query.join(Qualified,Faculty.facultyID == Qualified.facultyID) \
+     #         .add_columns(Faculty.facultyID, Faculty.facultyName, Qualified.Datequalified, Qualified.courseID)
+    #return render_template('join.html', title='Join',joined_1_n=results, joined_m_n=results2)

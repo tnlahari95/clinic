@@ -92,7 +92,7 @@ class AppointmentCreateForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(AppointmentCreateForm, self).__init__(*args, **kwargs)
         self.patient.choices = [
-            (a.PatientSSN, a.FirstName + " " + a.LastName)
+            (a.PatientSSN, a.FirstName + " " + a.LastName + " - " + str(a.PatientSSN))
             for a in Patient.query.with_entities(Patient.PatientSSN, Patient.FirstName, Patient.LastName).distinct().order_by(Patient.FirstName)
         ]
 
@@ -100,22 +100,22 @@ class AppointmentUpdateForm(AppointmentCreateForm):
     submit = SubmitField('Update')
     
     
-class TreatmentplanCreateForm(FlaskForm):
-    TreatmentID = IntegerField('TreatmentID', validators=[DataRequired()])
-    TreatmentCost = DecimalField('TreatmentCost:')
-    Is_Trauma = BooleanField('Is trauma:')
-    Measures_taken = StringField('Measures taken:')
-    Is_Medication = BooleanField('Is medication:')
-    Medicine_name = StringField('Medicine name:')
+class TreatmentPlanCreateForm(FlaskForm):
+    TreatmentID = IntegerField('Treatment ID', validators=[DataRequired()])
+    TreatmentCost = DecimalField('Treatment Cost:')
+    Is_Trauma = BooleanField('Is Trauma:')
+    Measures_taken = StringField('Measures Taken:')
+    Is_Medication = BooleanField('Is Medication:')
+    Medicine_name = StringField('Medicine Name:')
     Dosage = StringField('Dosage')
     Is_councelling = BooleanField('Is Councelling:')
     Councelling_Feedback = StringField('Councelling Feedback:')
-    Is_therapy = BooleanField('Is therapy:')
+    Is_therapy = BooleanField('Is Therapy:')
     Therapy_Outcome = StringField('Therapy Outcome:')
     
     submit = SubmitField('Create')
 
-class TreatmentplanUpdateForm(TreatmentplanCreateForm):
+class TreatmentPlanUpdateForm(TreatmentPlanCreateForm):
     submit = SubmitField('Update')
     
 class TreatCreateForm(FlaskForm):

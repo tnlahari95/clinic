@@ -1,18 +1,24 @@
 {% extends "layout.html" %} {% block content %} {% for row in outString1 %}
 <article class="media content-section">
   <div class="media-body">
-    <div class="article-metadata">
-      <div class="flex-container">
+    <div class="article-metadata pb-2">
+      <a class="mr-2" href="{{ url_for('treat', TreatmentID=row.TreatmentID, AppointmentID=row.AppointmentID, DoctorID=row.DoctorID) }}">Treatment Log ID: {{ row['TreatmentID'] }}</a>	  
+    </div>
+    <div class="article-metadata pt-2">
+      <div class="d-flex justify-content-between">
         <div>
-          <p style="color: purple">
-            Patient Name: {{row['FirstName']}} {{row['LastName']}}
-          </p>
+          <a href="{{ url_for('patient', patientssn=row.PatientSSN) }}">
+            <p>
+              <strong>Patient Name: {{row['FirstName']}} {{row['LastName']}}</strong>
+            </p>
+          </a>
         </div>
-
         <div>
-          <p>
-            AppointmentID: {{row['AppointmentID']}}<br />Date:
-            {{row['Date']}}<br />Time: {{row['Time']}}
+          <p class="text-right">
+            <a href="{{ url_for('appointment', AppointmentID=row.AppointmentID) }}">
+              Appointment ID: {{row['AppointmentID']}}
+            </a><br />
+            Date: {{row['Date']}} at {{row['Time']}}
           </p>
         </div>
       </div>
@@ -24,10 +30,14 @@
     <div class="article-metadata">
       <p>Doctor's Description: {{row['Description']}}</p>
     </div>
-    <p>
-      Treatment Plan: {{row['Medicine_name']}}<br />Treatment Cost($):
-      {{row['TreatmentCost']}}
-    </p>
+    <div class="d-flex justify-content-between pt-2">
+      <a href="{{ url_for('treatmentplan', TreatmentID=row.TreatmentID) }}">
+        <p>Treatment Plan: {{row['Medicine_name']}}</p>
+      </a>
+      <p>
+        <strong>Treatment Cost: ${{row['TreatmentCost']}}</strong>
+      </p>
+    </div>
   </div>
 </article>
 {% endfor %} {% endblock content %}

@@ -7,7 +7,9 @@
               <a class="mr-2" href="{{ url_for('treatmentplan', TreatmentID=row.TreatmentID) }}">Treatment ID: {{ row['TreatmentID'] }}</a>		  
               <small class="text-muted">Treatment Cost: {{ row['TreatmentCost'] }}</small>		  
             </div>
-			    
+            <a href="{{ url_for('treatmentplan', TreatmentID=row.TreatmentID) }}">
+              Click to view more information about this treatment plan.
+            </a>
           </div>
         </article>
      {% endfor %}
