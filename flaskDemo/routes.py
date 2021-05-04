@@ -7,6 +7,8 @@ from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, Doct
 from flaskDemo.models import Appointment, Doctor, Patient, TreatmentPlan, Treats, User
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
+import mysql.connector
+from mysql.connector import Error
 
 
 @app.route("/")
@@ -150,7 +152,23 @@ def account():
 @app.route("/doctors")
 def doctors():
     doctors = Doctor.query.all()
-    return render_template('doctors.html', title="Doctors", outString=doctors)
+    try:
+        conn = mysql.connector.connect(
+            host='192.168.64.2', port='3306', database='patient', 
+            user='dustin', password='password'
+        )
+        if conn.is_connected():
+            cursor = conn.cursor()
+        else:
+            return('error when connecting to mysql server')
+        cursor.execute("SELECT COUNT(doctorID) FROM Doctor")
+        returnCount = cursor.fetchone()[0]
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+    
+    return render_template('doctors.html', title="Doctors", outString=doctors, count=returnCount)
 
 @app.route("/doctors/<DoctorID>")
 @login_required
@@ -206,7 +224,23 @@ def delete_doctor(DoctorID):
 @app.route("/patients")
 def patients():
     patients = Patient.query.all()
-    return render_template('patients.html', title="Patients", outString=patients)
+    try:
+        conn = mysql.connector.connect(
+            host='192.168.64.2', port='3306', database='patient', 
+            user='dustin', password='password'
+        )
+        if conn.is_connected():
+            cursor = conn.cursor()
+        else:
+            return('error when connecting to mysql server')
+        cursor.execute("SELECT COUNT(PatientSSN) FROM Patient")
+        returnCount = cursor.fetchone()[0]
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+
+    return render_template('patients.html', title="Patients", outString=patients, count=returnCount)
 
 @app.route("/patients/<patientssn>")
 @login_required
@@ -265,7 +299,23 @@ def delete_patient(patientssn):
 def appointments(): 
     appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
                     .add_columns(Appointment.AppointmentID, Patient.FirstName, Patient.LastName, Appointment.Date, Appointment.Time, Appointment.Is_Emergency)
-    return render_template('appointments.html', title="Appointments", outString=appointments)
+    try:
+        conn = mysql.connector.connect(
+            host='192.168.64.2', port='3306', database='patient', 
+            user='dustin', password='password'
+        )
+        if conn.is_connected():
+            cursor = conn.cursor()
+        else:
+            return('error when connecting to mysql server')
+        cursor.execute("SELECT COUNT(AppointmentId) FROM Appointment")
+        returnCount = cursor.fetchone()[0]
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+    
+    return render_template('appointments.html', title="Appointments", outString=appointments, count=returnCount)
 
 @app.route("/appointments/<AppointmentID>")
 @login_required
@@ -326,7 +376,23 @@ def delete_appointment(AppointmentID):
 @app.route("/treatmentplans")
 def treatmentplans():
     treatmentplans = TreatmentPlan.query.all()
-    return render_template('treatmentplans.html', title="Treatment Plan", outString=treatmentplans)
+    try:
+        conn = mysql.connector.connect(
+            host='192.168.64.2', port='3306', database='patient', 
+            user='dustin', password='password'
+        )
+        if conn.is_connected():
+            cursor = conn.cursor()
+        else:
+            return('error when connecting to mysql server')
+        cursor.execute("SELECT COUNT(TreatmentID) FROM TreatmentPlan")
+        returnCount = cursor.fetchone()[0]
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+        
+    return render_template('treatmentplans.html', title="Treatment Plan", outString=treatmentplans, count=returnCount)
 
 @app.route("/treatmentplans/<TreatmentID>")
 @login_required
@@ -411,15 +477,3 @@ def invoices():
                                                 Appointment.Time, Appointment.Reason, Doctor.DoctorID)
                 
     return render_template('invoices.html', outString1=resultsinvoice)
-
-   # resultsinvoice = Appointment.query.join(Patient,Appointment.PatientSSN == Patient.PatientSSN) \
-    #         .add_columns(Appointment.PatientSSN, Patient.FirstName, Patient.LastName, Patient.Address) \
-     #        .join(Doctor, Treats.DoctorID == Doctor.DoctorID).add_columns(Treats.DoctorID)\
-      #          .join(TreatmentPlan, Treats.TreatmentID == TreatmentPlan.TreatmentID).add_columns(Treats.TreatmentID, Treats.Description,TreatmentPlan.TreatmentCost)\
-       #         .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID).add_columns(Treats.AppointmentID)
-                
-    #return render_template('invoice.html', title='invoice', outString1=resultsinvoice)
-                
-    #results = Faculty.query.join(Qualified,Faculty.facultyID == Qualified.facultyID) \
-     #         .add_columns(Faculty.facultyID, Faculty.facultyName, Qualified.Datequalified, Qualified.courseID)
-    #return render_template('join.html', title='Join',joined_1_n=results, joined_m_n=results2)

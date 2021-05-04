@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
+    <h5>Number of Patients: {{count}}</h5>
+    <hr>
     {% for row in outString %}
         <article class="media content-section">
           <div class="media-body">
