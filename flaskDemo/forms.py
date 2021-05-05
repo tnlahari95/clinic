@@ -119,9 +119,6 @@ class TreatmentPlanUpdateForm(TreatmentPlanCreateForm):
     submit = SubmitField('Update')
     
 class TreatCreateForm(FlaskForm):
-    doctors = Patient.query.with_entities(Doctor.DoctorID, Doctor.FirstName, Doctor.LastName).distinct()
-    doctorchoices = [(row[0],row[1] + " " + row[2]) for row in doctors]
-
     TreatmentID = SelectField('Treatment', coerce=int, validators=[DataRequired()])
     AppointmentID = SelectField('Appointment', coerce=int, validators=[DataRequired()])
     DoctorID = SelectField('Doctor', coerce=int, validators=[DataRequired()])
