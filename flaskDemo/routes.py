@@ -15,6 +15,7 @@ from mysql.connector import Error
 
 @app.route("/")
 @app.route("/home")
+@login_required
 def home():
     treats = Treats.query.join(TreatmentPlan, Treats.TreatmentID == Treats.TreatmentID) \
         .join(Doctor, Doctor.DoctorID == Treats.DoctorID) \
@@ -155,6 +156,7 @@ def account():
 
 
 @app.route("/doctors")
+@login_required
 def doctors():
     doctors = Doctor.query.all()
     try:
@@ -232,6 +234,7 @@ def delete_doctor(DoctorID):
 
 
 @app.route("/patients")
+@login_required
 def patients():
     patients = Patient.query.all()
     try:
@@ -328,6 +331,7 @@ def delete_patient(patientssn):
 
 
 @app.route("/appointments")
+@login_required
 def appointments():
     appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN) \
         .add_columns(Appointment.AppointmentID, Patient.FirstName, Patient.LastName, Appointment.Date, Appointment.Time,
@@ -414,6 +418,7 @@ def delete_appointment(AppointmentID):
 
 
 @app.route("/treatmentplans")
+@login_required
 def treatmentplans():
     treatmentplans = TreatmentPlan.query.all()
     try:

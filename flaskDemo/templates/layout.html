@@ -24,12 +24,19 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link{% if active_page == 'treats' %} active{% endif %}" href="{{ url_for('home') }}">Treatment Log</a>
-              <a class="nav-item nav-link{% if active_page == 'doctors' %} active{% endif %}" href="{{ url_for('doctors') }}">Doctors</a>
+              <li class="nav-item dropdown{% if active_page == 'doctors' %} active{% endif %}">
+                <a class="nav-link dropdown-toggle" href="#" id="doctors-dropdown" role="button" data-toggle="dropdown">
+                  Doctors
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item{% if active_page == 'doctors' %} active{% endif %}" href="{{url_for('doctors')}}">All Doctors</a>
+                  <a class="dropdown-item{% if active_page == 'doctorinfo' %} active{% endif %}" href="{{url_for('doctorinfo')}}">Doctor-Patient Treatment Info</a>
+                </div>
+              </li>
               <a class="nav-item nav-link{% if active_page == 'patients' %} active{% endif %}" href="{{ url_for('patients') }}">Patients</a>
               <a class="nav-item nav-link{% if active_page == 'appointments' %} active{% endif %}" href="{{ url_for('appointments') }}">Appointments</a>
               <a class="nav-item nav-link{% if active_page == 'treatmentplans' %} active{% endif %}" href="{{ url_for('treatmentplans') }}">Treatment Plans</a>
               <a class="nav-item nav-link{% if active_page == 'invoices' %} active{% endif %}" href="{{url_for('invoices')}}">Invoices</a>
-              <a class ="nav-item nav-link{% if active_page == 'doctorinfo' %} active {% endif %}" href="{{url_for('doctorinfo')}}">Doctor-Patient Treatment Info</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
