@@ -3,7 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskDemo import app, db, bcrypt
-from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, DoctorCreateForm, DoctorUpdateForm, PatientCreateForm, PatientUpdateForm, TreatmentPlanCreateForm, TreatmentPlanUpdateForm, TreatCreateForm, TreatUpdateForm, AppointmentCreateForm, AppointmentUpdateForm
+from flaskDemo.forms import RegistrationForm, LoginForm, UpdateAccountForm, DoctorCreateForm, DoctorUpdateForm, \
+    PatientCreateForm, PatientUpdateForm, TreatmentPlanCreateForm, TreatmentPlanUpdateForm, TreatCreateForm, \
+    TreatUpdateForm, AppointmentCreateForm, AppointmentUpdateForm
 from flaskDemo.models import Appointment, Doctor, Patient, TreatmentPlan, Treats, User
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
@@ -13,12 +15,11 @@ from mysql.connector import Error
 
 @app.route("/")
 @app.route("/home")
-def home():  
-      
-    treats = Treats.query.join(TreatmentPlan, Treats.TreatmentID == Treats.TreatmentID)\
-          .join(Doctor, Doctor.DoctorID == Treats.DoctorID)\
-          .join(Appointment, Appointment.AppointmentID == Treats.AppointmentID)
-        
+def home():
+    treats = Treats.query.join(TreatmentPlan, Treats.TreatmentID == Treats.TreatmentID) \
+        .join(Doctor, Doctor.DoctorID == Treats.DoctorID) \
+        .join(Appointment, Appointment.AppointmentID == Treats.AppointmentID)
+
     return render_template('home.html', title="Treatment Logs", outString=treats)
 
 @app.route("/treat/<TreatmentID>/<AppointmentID>/<DoctorID>")
@@ -26,23 +27,26 @@ def home():
 def treat(TreatmentID, AppointmentID, DoctorID):
     treat = Treats.query.get_or_404([TreatmentID, AppointmentID, DoctorID])
     doctor = Doctor.query.get_or_404(DoctorID)
-    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                    .filter(Appointment.AppointmentID == AppointmentID)\
-                    .add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName).first()
+    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN) \
+        .filter(Appointment.AppointmentID == AppointmentID) \
+        .add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName).first()
     treatment = TreatmentPlan.query.get_or_404(TreatmentID)
     return render_template('treat.html', treat=treat, doctor=doctor, appointment=appointment, treatment=treatment)
+
 
 @app.route("/treat/new", methods=['GET', 'POST'])
 @login_required
 def new_treat():
     form = TreatCreateForm()
     if form.validate_on_submit():
-        treat = Treats(TreatmentID=form.TreatmentID.data,AppointmentID=form.AppointmentID.data, DoctorID=form.DoctorID.data, Description=form.Description.data)
+        treat = Treats(TreatmentID=form.TreatmentID.data, AppointmentID=form.AppointmentID.data,
+                       DoctorID=form.DoctorID.data, Description=form.Description.data)
         db.session.add(treat)
         db.session.commit()
         flash('You have added a new treat!', 'success')
         return redirect(url_for('home'))
     return render_template('create_treat.html', title='New Treat', form=form, legend='New Treat')
+
 
 @app.route("/treat/<TreatmentID>/<AppointmentID>/<DoctorID>/update", methods=['GET', 'POST'])
 @login_required
@@ -55,22 +59,23 @@ def update_treat(TreatmentID, AppointmentID, DoctorID):
         treat.AppointmentID = form.AppointmentID.data
         treat.DoctorID = form.DoctorID.data
         treat.Description = form.Description.data
-      
+
         db.session.commit()
         flash('The treat has been updated!', 'success')
-        return redirect(url_for('treat', TreatmentID=treat.TreatmentID, AppointmentID=treat.AppointmentID, DoctorID=treat.DoctorID))
+        return redirect(
+            url_for('treat', TreatmentID=treat.TreatmentID, AppointmentID=treat.AppointmentID, DoctorID=treat.DoctorID))
     elif request.method == 'GET':
         form.TreatmentID.data = treat.TreatmentID
         form.AppointmentID.data = treat.AppointmentID
         form.DoctorID.data = treat.DoctorID
         form.Description.data = treat.Description
-    
+
     return render_template('create_treat.html', title='Update Treat', form=form, legend='Update Treat')
 
 @app.route("/treat/<TreatmentID>/<AppointmentID>/<DoctorID>/delete", methods=['POST'])
 @login_required
 def delete_treat(TreatmentID, AppointmentID, DoctorID):
-    treat = Treats.query.get_or_404([TreatmentID,AppointmentID,DoctorID])
+    treat = Treats.query.get_or_404([TreatmentID, AppointmentID, DoctorID])
     db.session.delete(treat)
     db.session.commit()
     flash('The treat has been deleted!', 'success')
@@ -160,15 +165,16 @@ def doctors():
         if conn.is_connected():
             cursor = conn.cursor()
         else:
-            return('error when connecting to mysql server')
+            return ('error when connecting to mysql server')
         cursor.execute("SELECT COUNT(doctorID) FROM Doctor")
         returnCount = cursor.fetchone()[0]
     except Error as e:
         print(e)
     finally:
         conn.close()
-    
+
     return render_template('doctors.html', title="Doctors", outString=doctors, count=returnCount)
+
 
 @app.route("/doctors/<DoctorID>")
 @login_required
@@ -176,17 +182,20 @@ def doctor(DoctorID):
     doctor = Doctor.query.get_or_404(DoctorID)
     return render_template('doctor.html', title="doctor.DoctorID", doctor=doctor)
 
+
 @app.route("/doctors/new", methods=['GET', 'POST'])
 @login_required
 def new_doctor():
     form = DoctorCreateForm()
     if form.validate_on_submit():
-        doctor = Doctor(DoctorID=form.DoctorID.data, FirstName=form.FirstName.data, LastName=form.LastName.data, Speciality=form.Speciality.data)
+        doctor = Doctor(DoctorID=form.DoctorID.data, FirstName=form.FirstName.data, LastName=form.LastName.data,
+                        Speciality=form.Speciality.data)
         db.session.add(doctor)
         db.session.commit()
         flash('You have added a new doctor!', 'success')
         return redirect(url_for('doctors'))
     return render_template('create_doctor.html', title='New Doctor', form=form, legend='New Doctor')
+
 
 @app.route("/doctors/<DoctorID>/update", methods=['GET', 'POST'])
 @login_required
@@ -199,7 +208,7 @@ def update_doctor(DoctorID):
         doctor.FirstName = form.FirstName.data
         doctor.LastName = form.LastName.data
         doctor.Speciality = form.Speciality.data
-        
+
         db.session.commit()
         flash('The doctor has been updated!', 'success')
         return redirect(url_for('doctor', DoctorID=DoctorID))
@@ -208,8 +217,9 @@ def update_doctor(DoctorID):
         form.FirstName.data = doctor.FirstName
         form.LastName.data = doctor.LastName
         form.Speciality.data = doctor.Speciality
-        
+
     return render_template('create_doctor.html', title='Update Doctor', form=form, legend='Update Doctor')
+
 
 @app.route("/doctors/<DoctorID>/delete", methods=['POST'])
 @login_required
@@ -232,7 +242,7 @@ def patients():
         if conn.is_connected():
             cursor = conn.cursor()
         else:
-            return('error when connecting to mysql server')
+            return ('error when connecting to mysql server')
         cursor.execute("SELECT COUNT(PatientSSN) FROM Patient")
         returnCount = cursor.fetchone()[0]
     except Error as e:
@@ -241,6 +251,7 @@ def patients():
         conn.close()
 
     return render_template('patients.html', title="Patients", outString=patients, count=returnCount)
+
 
 @app.route("/patients/<patientssn>")
 @login_required
@@ -254,28 +265,31 @@ def patient(patientssn):
         if conn.is_connected():
             cursor = conn.cursor()
         else:
-            return('error when connecting to mysql server')
+            return ('error when connecting to mysql server')
         cursor.execute("SELECT * FROM Appointment WHERE PatientSSN=" + patientssn)
         appointments = cursor.fetchall()
     except Error as e:
         print(e)
     finally:
         conn.close()
-    
+
     return render_template('patient.html', title="patient", patient=patient, appointments=appointments)
+
 
 @app.route("/patients/new", methods=['GET', 'POST'])
 @login_required
 def new_patient():
     form = PatientCreateForm()
     if form.validate_on_submit():
-        patient = Patient(PatientSSN=form.patientssn.data, FirstName=form.first_name.data, LastName=form.last_name.data, Gender=form.gender.data,
-                            Address=form.address.data, ContactNumber=form.contact_number.data)
+        patient = Patient(PatientSSN=form.patientssn.data, FirstName=form.first_name.data, LastName=form.last_name.data,
+                          Gender=form.gender.data,
+                          Address=form.address.data, ContactNumber=form.contact_number.data)
         db.session.add(patient)
         db.session.commit()
         flash('You have added a new patient!', 'success')
         return redirect(url_for('patients'))
     return render_template('create_patient.html', title='New Patient', form=form, legend='New Patient')
+
 
 @app.route("/patients/<patientssn>/update", methods=['GET', 'POST'])
 @login_required
@@ -302,6 +316,7 @@ def update_patient(patientssn):
         form.contact_number.data = patient.ContactNumber
     return render_template('create_patient.html', title='Update Patient', form=form, legend='Update Patient')
 
+
 @app.route("/patients/<patientssn>/delete", methods=['POST'])
 @login_required
 def delete_patient(patientssn):
@@ -311,10 +326,12 @@ def delete_patient(patientssn):
     flash('The patient has been deleted!', 'success')
     return redirect(url_for('patients'))
 
+
 @app.route("/appointments")
-def appointments(): 
-    appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                    .add_columns(Appointment.AppointmentID, Patient.FirstName, Patient.LastName, Appointment.Date, Appointment.Time, Appointment.Is_Emergency)
+def appointments():
+    appointments = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN) \
+        .add_columns(Appointment.AppointmentID, Patient.FirstName, Patient.LastName, Appointment.Date, Appointment.Time,
+                     Appointment.Is_Emergency)
     try:
         conn = mysql.connector.connect(
             host='192.168.64.2', port='3306', database='patient', 
@@ -323,22 +340,24 @@ def appointments():
         if conn.is_connected():
             cursor = conn.cursor()
         else:
-            return('error when connecting to mysql server')
+            return ('error when connecting to mysql server')
         cursor.execute("SELECT COUNT(AppointmentId) FROM Appointment")
         returnCount = cursor.fetchone()[0]
     except Error as e:
         print(e)
     finally:
         conn.close()
-    
+
     return render_template('appointments.html', title="Appointments", outString=appointments, count=returnCount)
+
 
 @app.route("/appointments/<AppointmentID>")
 @login_required
 def appointment(AppointmentID):
-    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                    .filter(Appointment.AppointmentID == AppointmentID) \
-                    .add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName, Appointment.Date, Appointment.Time, Appointment.Is_Emergency, Appointment.Reason).first()
+    appointment = Appointment.query.join(Patient, Appointment.PatientSSN == Patient.PatientSSN) \
+        .filter(Appointment.AppointmentID == AppointmentID) \
+        .add_columns(Appointment.AppointmentID, Patient.PatientSSN, Patient.FirstName, Patient.LastName,
+                     Appointment.Date, Appointment.Time, Appointment.Is_Emergency, Appointment.Reason).first()
     return render_template('appointment.html', title="Appointment", appointment=appointment)
 
 @app.route("/appointments/new", methods=['GET', 'POST'])
@@ -346,12 +365,15 @@ def appointment(AppointmentID):
 def new_appointment():
     form = AppointmentCreateForm()
     if form.validate_on_submit():
-        appointment = Appointment(AppointmentID=form.appointmentid.data, PatientSSN=form.patient.data, Date=form.date.data, Time=form.time.data, Is_Emergency=form.is_emergency.data, Reason=form.reason.data)
+        appointment = Appointment(AppointmentID=form.appointmentid.data, PatientSSN=form.patient.data,
+                                  Date=form.date.data, Time=form.time.data, Is_Emergency=form.is_emergency.data,
+                                  Reason=form.reason.data)
         db.session.add(appointment)
         db.session.commit()
         flash('You have added a new Appointment!', 'success')
         return redirect(url_for('appointments'))
     return render_template('create_appointment.html', title='New Appointment', form=form, legend='New Appointment')
+
 
 @app.route("/appointments/<AppointmentID>/update", methods=['GET', 'POST'])
 @login_required
@@ -376,7 +398,9 @@ def update_appointment(AppointmentID):
         form.time.data = appointment.Time
         form.is_emergency.data = appointment.Is_Emergency
         form.reason.data = appointment.Reason
-    return render_template('create_appointment.html', title='Update Appointment', form=form, legend='Update Appointment')
+    return render_template('create_appointment.html', title='Update Appointment', form=form,
+                           legend='Update Appointment')
+
 
 @app.route("/appointments/<AppointmentID>/delete", methods=['POST'])
 @login_required
@@ -400,15 +424,16 @@ def treatmentplans():
         if conn.is_connected():
             cursor = conn.cursor()
         else:
-            return('error when connecting to mysql server')
+            return ('error when connecting to mysql server')
         cursor.execute("SELECT COUNT(TreatmentID) FROM TreatmentPlan")
         returnCount = cursor.fetchone()[0]
     except Error as e:
         print(e)
     finally:
         conn.close()
-        
+
     return render_template('treatmentplans.html', title="Treatment Plan", outString=treatmentplans, count=returnCount)
+
 
 @app.route("/treatmentplans/<TreatmentID>")
 @login_required
@@ -416,23 +441,26 @@ def treatmentplan(TreatmentID):
     treatmentplan = TreatmentPlan.query.get_or_404(TreatmentID)
     return render_template('treatmentplan.html', title="treatmentplan.TreatmentID", treatmentplan=treatmentplan)
 
+
 @app.route("/treatmentplans/new", methods=['GET', 'POST'])
 @login_required
 def new_treatmentplan():
     form = TreatmentPlanCreateForm()
     if form.validate_on_submit():
-        treatmentplan = TreatmentPlan(TreatmentID=form.TreatmentID.data,TreatmentCost=form.TreatmentCost.data,\
-                        Is_Medication=form.Is_Medication.data,\
-                        Medicine_name=form.Medicine_name.data, Dosage=form.Dosage.data, \
-                        Is_Trauma=form.Is_Trauma.data, Measures_taken=form.Measures_taken.data,\
-                        Is_councelling=form.Is_councelling.data, \
-                        Councelling_Feedback=form.Councelling_Feedback.data, \
-                        Is_therapy=form.Is_therapy.data, Therapy_Outcome=form.Therapy_Outcome.data)
+        treatmentplan = TreatmentPlan(TreatmentID=form.TreatmentID.data, TreatmentCost=form.TreatmentCost.data, \
+                                      Is_Medication=form.Is_Medication.data, \
+                                      Medicine_name=form.Medicine_name.data, Dosage=form.Dosage.data, \
+                                      Is_Trauma=form.Is_Trauma.data, Measures_taken=form.Measures_taken.data, \
+                                      Is_councelling=form.Is_councelling.data, \
+                                      Councelling_Feedback=form.Councelling_Feedback.data, \
+                                      Is_therapy=form.Is_therapy.data, Therapy_Outcome=form.Therapy_Outcome.data)
         db.session.add(treatmentplan)
         db.session.commit()
         flash('You have added a new treatmentplan!', 'success')
         return redirect(url_for('treatmentplans'))
-    return render_template('create_treatmentplan.html', title='New Treatment Plan', form=form, legend='New Treatment Plan')
+    return render_template('create_treatmentplan.html', title='New Treatment Plan', form=form,
+                           legend='New Treatment Plan')
+
 
 @app.route("/treatmentplans/<TreatmentID>/update", methods=['GET', 'POST'])
 @login_required
@@ -452,24 +480,26 @@ def update_treatmentplan(TreatmentID):
         treatmentplan.Councelling_Feedback = form.Councelling_Feedback.data
         treatmentplan.Is_therapy = form.Is_therapy.data
         treatmentplan.Therapy_Outcome = form.Therapy_Outcome.data
-        
+
         db.session.commit()
         flash('The treatmentplan has been updated!', 'success')
         return redirect(url_for('treatmentplan', TreatmentID=TreatmentID))
     elif request.method == 'GET':
-        form.TreatmentID.data =treatmentplan.TreatmentID
-        form.TreatmentCost.data =treatmentplan.TreatmentCost
-        form.Is_Trauma.data= treatmentplan.Is_Trauma
+        form.TreatmentID.data = treatmentplan.TreatmentID
+        form.TreatmentCost.data = treatmentplan.TreatmentCost
+        form.Is_Trauma.data = treatmentplan.Is_Trauma
         form.Measures_taken.data = treatmentplan.Measures_taken
-        form.Is_Medication.data=treatmentplan.Is_Medication
-        form.Medicine_name.data=treatmentplan.Medicine_name
-        form.Dosage.data=treatmentplan.Dosage
-        form.Is_councelling.data=treatmentplan.Is_councelling
-        form.Councelling_Feedback.data=treatmentplan.Councelling_Feedback
-        form.Is_therapy.data=treatmentplan.Is_therapy
-        form.Therapy_Outcome.data=treatmentplan.Therapy_Outcome
-              
-    return render_template('create_treatmentplan.html', title='Update Treatment Plan', form=form, legend='Update Treatment Plan')
+        form.Is_Medication.data = treatmentplan.Is_Medication
+        form.Medicine_name.data = treatmentplan.Medicine_name
+        form.Dosage.data = treatmentplan.Dosage
+        form.Is_councelling.data = treatmentplan.Is_councelling
+        form.Councelling_Feedback.data = treatmentplan.Councelling_Feedback
+        form.Is_therapy.data = treatmentplan.Is_therapy
+        form.Therapy_Outcome.data = treatmentplan.Therapy_Outcome
+
+    return render_template('create_treatmentplan.html', title='Update Treatment Plan', form=form,
+                           legend='Update Treatment Plan')
+
 
 @app.route("/treatmentplans/<TreatmentID>/delete", methods=['POST'])
 @login_required
@@ -483,15 +513,16 @@ def delete_treatmentplan(TreatmentID):
 
 @app.route("/invoices")
 @login_required
-def invoices():  
-    resultsinvoice = Treats.query.join(TreatmentPlan, Treats.TreatmentID == TreatmentPlan.TreatmentID)\
-                                 .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID)\
-                                 .join(Doctor, Treats.DoctorID == Doctor.DoctorID)\
-                                 .join(Patient, Appointment.PatientSSN == Patient.PatientSSN)\
-                                 .add_columns(TreatmentPlan.TreatmentCost, Treats.TreatmentID, Treats.Description, TreatmentPlan.Medicine_name, 
-                                                Patient.PatientSSN, Patient.FirstName, Patient.LastName, Appointment.AppointmentID, Appointment.Date, 
-                                                Appointment.Time, Appointment.Reason, Doctor.DoctorID)
-                
+def invoices():
+    resultsinvoice = Treats.query.join(TreatmentPlan, Treats.TreatmentID == TreatmentPlan.TreatmentID) \
+        .join(Appointment, Treats.AppointmentID == Appointment.AppointmentID) \
+        .join(Doctor, Treats.DoctorID == Doctor.DoctorID) \
+        .join(Patient, Appointment.PatientSSN == Patient.PatientSSN) \
+        .add_columns(TreatmentPlan.TreatmentCost, Treats.TreatmentID, Treats.Description, TreatmentPlan.Medicine_name,
+                     Patient.PatientSSN, Patient.FirstName, Patient.LastName, Appointment.AppointmentID,
+                     Appointment.Date,
+                     Appointment.Time, Appointment.Reason, Doctor.DoctorID)
+
     return render_template('invoices.html', outString1=resultsinvoice)
 
 @app.route("/doctorinfo")
@@ -507,15 +538,17 @@ def doctorinfo():
             cursor = conn.cursor()
         else:
             return ('error when connecting to mysql server')
-        sql="SELECT treats.DoctorID,COUNT(appointment.PatientSSN),doctor.LastName\
+
+        row = """ 
+          SELECT treats.DoctorID,COUNT(appointment.PatientSSN),doctor.LastName\
                         FROM treats,appointment,doctor\
                         WHERE treats.AppointmentID = appointment.AppointmentID AND treats. DoctorID = doctor.DoctorID\
-                        GROUP BY DoctorID"
-        cursor.execute(sql)
-        returnCount = cursor.fetchall()
+                        GROUP BY DoctorID"""
+        cursor.execute(row)
+        conn.commit()
     except Error as e:
-        for e in returnCount:
-            print(e)
+        print(e)
     finally:
         conn.close()
-    return render_template('doctorinfo.html', outString1=doctorinfo)
+    info = cursor.fetchall()
+    return render_template('doctorinfo.html', outString1=info)

@@ -7,13 +7,6 @@
     <div class="article-metadata pb-2">
       <a class="mr-2" href="{{ url_for('treat', TreatmentID=row.TreatmentID, AppointmentID=row.AppointmentID, DoctorID=row.DoctorID) }}">Doctor ID: {{ row['DoctorID'] }}</a>
     </div>
-      <div>
-          <p class="text-right">
-            <a href="{{ url_for('doctor', DoctorID=row.DoctorID) }}">
-              Doctor Name: {{row['FirstName'], row['LastName']}}
-            </a>
-          </p>
-        </div>
     <div class="article-metadata pt-2">
       <div class="d-flex justify-content-between">
         <div>
@@ -23,7 +16,19 @@
             </p>
           </a>
         </div>
+        <div>
+          <p class="text-right">
+            <a href="{{ url_for('doctor', DoctorID=row.DoctorID) }}">
+              Doctor Name: {{row['FirstName'], row['LastName']}}
+            </a>
+          </p>
+        </div>
       </div>
     </div>
+      <p>
+        <strong>Treatment Cost: ${{row['TreatmentCost']}}</strong>
+      </p>
+    </div>
+  </div>
 </article>
 {% endfor %} {% endblock content %}
