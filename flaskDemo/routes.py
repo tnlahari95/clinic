@@ -525,7 +525,7 @@ def invoices():
 
     return render_template('invoices.html', outString1=resultsinvoice)
 
-@app.route("/doctorinfo")
+@app.route("/doctors-info")
 @login_required
 def doctorinfo():
     doctorinfo = Doctor.query.all()
@@ -539,16 +539,15 @@ def doctorinfo():
         else:
             return ('error when connecting to mysql server')
 
-        row = """ 
-          SELECT treats.DoctorID,COUNT(appointment.PatientSSN),doctor.LastName\
-                        FROM treats,appointment,doctor\
-                        WHERE treats.AppointmentID = appointment.AppointmentID AND treats. DoctorID = doctor.DoctorID\
-                        GROUP BY DoctorID"""
-        cursor.execute(row)
-        conn.commit()
+        cursor.execute(""" 
+          SELECT Treats.DoctorID, COUNT(Appointment.PatientSSN), Doctor.FirstName, Doctor.LastName
+                        FROM Treats, Appointment, Doctor
+                        WHERE Treats.AppointmentID = Appointment.AppointmentID AND Treats.DoctorID = Doctor.DoctorID
+                        GROUP BY DoctorID""")
+        info = cursor.fetchall()
     except Error as e:
         print(e)
     finally:
         conn.close()
-    info = cursor.fetchall()
-    return render_template('doctorinfo.html', outString1=info)
+
+    return render_template('doctorinfo.html', title="Doctor Info", info=info)

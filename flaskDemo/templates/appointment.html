@@ -2,19 +2,15 @@
 {% set active_page = "appointments" %}
 {% block content %}
   <article class="media content-section">
-<!--    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/default.jpg')}}"> -->
     <div class="media-body">
       <div class="article-metadata">
         <a class="mr-2" href="#">Appointment ID: {{ appointment['AppointmentID'] }}</a>
         <small class="text-muted"></small>
-
           <div>
             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_appointment', AppointmentID=appointment.AppointmentID) }}">Update</a>
             <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
           </div>
- 
       </div>
-
       <h2>
         <a href="{{ url_for('patient', patientssn=appointment.PatientSSN) }}">Patient: {{ appointment['FirstName']}} {{ appointment['LastName'] }}</a>
       </h2>

@@ -26,20 +26,20 @@ class User(db.Model, UserMixin):
 
 
 class Appointment(db.Model):
-    __table__ = db.Model.metadata.tables['appointment']
+    __table__ = db.Model.metadata.tables['Appointment']
 
 
 class Doctor(db.Model):
-    __table__ = db.Model.metadata.tables['doctor']
+    __table__ = db.Model.metadata.tables['Doctor']
 
 
 class Patient(db.Model):
-    __table__ = db.Model.metadata.tables['patient']
+    __table__ = db.Model.metadata.tables['Patient']
 
 
 class TreatmentPlan(db.Model):
-    __table__ = db.Model.metadata.tables['treatmentplan']
+    __table__ = db.Model.metadata.tables['TreatmentPlan']
 
 
 class Treats(db.Model):
-    __table__ = db.Model.metadata.tables['treats']
+    __table__ = db.Model.metadata.tables['Treats']
