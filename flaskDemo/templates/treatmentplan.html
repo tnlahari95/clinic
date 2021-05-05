@@ -32,22 +32,22 @@
       {% endif %}
     </p>
     <p>
-      Is Councelling? {% if treatmentplan['Is_Councelling'] == 1 %} True {% else %} False {% endif %}
-      {% if treatmentplan['Is_Councelling'] == 1 %}
-        <br />Councelling Feedback: {{treatmentplan ['Councelling_Feedback']}}
-      {% endif %}
-    </p>
-    <p>
-      Is Therapy? {% if treatmentplan['Is_Therapy'] == 1 %} True {% else %} False {% endif %}
-      {% if treatmentplan['Is_Therapy'] == 1 %}
-        <br />Therapy Outcome: {{treatmentplan ['Therapy_Outcome']}}
-      {% endif %}
-    </p>
-    <p>
       Is Medication: {% if treatmentplan['Is_Medication'] == 1 %} True {% else %} False {% endif %}
       {% if treatmentplan['Is_Medication'] == 1 %}
         <br />Medicine Name: {{treatmentplan ['Medicine_name']}}
         <br />Dosage: {{treatmentplan ['Dosage']}}
+      {% endif %}
+    </p>
+    <p>
+      Is Councelling? {% if treatmentplan['Is_councelling'] == 1 %} True {% else %} False {% endif %}
+      {% if treatmentplan['Is_councelling'] == 1 %}
+        <br />Councelling Feedback: {{treatmentplan ['Councelling_Feedback']}}
+      {% endif %}
+    </p>
+    <p>
+      Is Therapy? {% if treatmentplan['Is_therapy'] == 1 %} True {% else %} False {% endif %}
+      {% if treatmentplan['Is_therapy'] == 1 %}
+        <br />Therapy Outcome: {{treatmentplan ['Therapy_Outcome']}}
       {% endif %}
     </p>
   </div>
